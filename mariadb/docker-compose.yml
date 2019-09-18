@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    ports:
+      - "3307:3006"
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root

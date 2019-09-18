@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  npm:
+    image: verdaccio/verdaccio
+    volumes:
+      - "./data:/verdaccio"
+    labels:
+      - traefik.enable=true
+      - traefik.npm.frontend.rule=Host:npm.5-anker.com
+      - traefik.npm.port=4873

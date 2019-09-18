@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  serp:
+    image: 5anker/serp
+    build: ./
+    restart: always
+    volumes:
+      - "./data:/root/serposcope"
+    ports:
+      - "7134:7134"
+    labels:
+      - traefik.enable=true
+      - traefik.serp.frontend.rule=Host:serp.5-anker.com
+      - traefik.serp.port=7134

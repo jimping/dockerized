@@ -1,0 +1,56 @@
+version: '3.6'
+
+volumes:
+  db:
+  storage:
+  logo:
+  public:
+
+services:
+  db:
+    image: mysql:5
+    env_file: .env
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+
+  app:
+    image: invoiceninja/invoiceninja
+    env_file: .env
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      -  storage:/var/www/app/storage
+      -  logo:/var/www/app/public/logo
+      -  public:/var/www/app/public
+
+  web:
+    image: nginx:1
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      -  storage:/var/www/app/storage
+      -  logo:/var/www/app/public/logo
+      -  public:/var/www/app/public
+    depends_on:
+      - app
+    ports:
+      - 8000:80
+
+  cron:
+    image: invoiceninja/invoiceninja
+    env_file: .env
+    volumes:
+      -  storage:/var/www/app/storage
+      -  logo:/var/www/app/public/logo
+      -  public:/var/www/app/public
+    entrypoint: |
+      bash -c 'bash -s <<EOF
+      trap "break;exit" SIGHUP SIGINT SIGTERM
+      sleep 300s
+      while /bin/true; do
+        ./artisan ninja:send-invoices
+        ./artisan ninja:send-reminders
+        sleep 1d
+      done
+      EOF'

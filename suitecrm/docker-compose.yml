@@ -1,0 +1,42 @@
+version: '2'
+services:
+
+  crm:
+    image: 'bitnami/suitecrm:7'
+    environment:
+      - MARIADB_HOST=db
+      - MARIADB_PORT_NUMBER=3306
+      - SUITECRM_DATABASE_USER=suitecrm
+      - SUITECRM_DATABASE_NAME=suitecrm
+      - SUITECRM_DATABASE_PASSWORD=suitecrm
+
+      - SUITECRM_USERNAME=j.imping
+      - SUITECRM_PASSWORD=5AnkImping.,
+      - SUITECRM_EMAIL=j.imping@5-anker.com
+      - SUITECRM_FIRST_NAME=Jonas
+      - SUITECRM_LAST_NAME=Imping
+
+      - SUITECRM_HOST=crm.5-anker.com
+      - SUITECRM_HTTP_TIMEOUT=300
+
+      - SUITECRM_SMTP_HOST=smtp.gmail.com
+      - SUITECRM_SMTP_USER=your_email@gmail.com
+      - SUITECRM_SMTP_PASSWORD=your_password
+      - SUITECRM_SMTP_PROTOCOL=TLS
+      - SUITECRM_SMTP_PORT=587
+    volumes:
+      - './data:/bitnami'
+    depends_on:
+      - db
+
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - ./mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=suitecrm
+      - MYSQL_DATABASE=suitecrm
+      - MYSQL_USER=suitecrm
