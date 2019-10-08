@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+  gitlab-runner:
+    image: jerob/docker-ispconfig
+    restart: always
+    command: /start.sh
+    environment:
+      - MAILMAN_EMAIL_HOST=test.com
+      - MAILMAN_EMAIL=test@test.com
+      - MAILMAN_PASS=pass
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./www:/var/www
+      - ./mail:/var/mail
+    ports:
+      - "20:20"
+      - "21:21"
+      - "30000-30009:30000-30009"
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+      - "53:53"
+      - "2222:22"

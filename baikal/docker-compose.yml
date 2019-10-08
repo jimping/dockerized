@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+  baikal:
+    image: ckulka/baikal:nginx
+    restart: always
+    labels:
+      traefik.baikal.frontend.rule: "Host: dav.5-anker.com"
+      traefik.baikal.port: 80
+
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    volumes:
+      - data:/var/www/baikal/Specific
+
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    ports:
+      - 3307:3306
+    volumes:
+      - ./mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=baikal
+      - MYSQL_DATABASE=baikal
+      - MYSQL_USER=baikal
+
+volumes:
+  data:

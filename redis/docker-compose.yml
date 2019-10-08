@@ -4,3 +4,5 @@ services:
   redis:
     image: redis
     restart: always
+  volumes:
+    - ./redis:/var/lib/redis
