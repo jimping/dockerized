@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  shopware:
+    image: shyim/shopware:6.3
+    environment:
+      APP_SECRET: 440dec3766de53010c5ccf6231c182acfc90bd25cff82e771245f736fd276518
+      INSTANCE_ID: 10612e3916e153dd3447850e944a03fabe89440970295447a30a75b151bd844e
+      APP_URL: http://localhost:8090
+      DATABASE_HOST: mysql
+      INSTALL_LOCALE: de-DE
+      CACHE_ADAPTER: redis
+      PHP_MEMORY_LIMIT: 4G
+      DATABASE_URL: mysql://shopware:shopware@mysql:3306/shopware
+    ports:
+      - 8090:80
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shopware
+      MYSQL_USER: shopware
+      MYSQL_PASSWORD: shopware
+
+  redis:
+    image: redis
