@@ -1,0 +1,48 @@
+resolver 127.0.0.11 ipv6=off;
+client_max_body_size 20M;
+server_tokens off;
+
+server {
+	listen 80;
+    listen [::]:80;
+
+    root /var/www/html;
+
+	index index.php index.html index.htm;
+
+	access_log stdout;
+	error_log stderr;
+
+    # allow sentry source map access
+	location ~ \.map$ {
+        allow 35.184.238.160/32;
+        allow 104.155.159.182/32;
+        allow 104.155.149.19/32;
+        allow 130.211.230.102/32;
+        deny all;
+    }
+
+	location / {
+		# try to serve file directly, fallback to index.php
+		try_files $uri $uri/ /index.php?$query_string;
+	}
+
+	location = /favicon.ico { access_log off; log_not_found off; }
+	location = /robots.txt  { access_log off; log_not_found off; }
+
+	error_page 404 /index.php;
+
+	location ~ \.php$ {
+		fastcgi_index index.php;
+		fastcgi_pass wordpress:9000; # address of a fastCGI server
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_param PATH_INFO $fastcgi_path_info;
+		include fastcgi_params;
+	}
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    include /etc/nginx/custom/optimize.conf;
+}
