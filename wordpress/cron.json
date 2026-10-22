@@ -1,8 +1,0 @@
-[{
-     "comment":"Run Scheduler",
-     "schedule":"@every 1m",
-     "command": "/usr/bin/wget https://www.splintnet.de/wp-cron.php",
-     "container": "splintnet",
-     "project": "splintnet",
-     "onstart":true
- }]
